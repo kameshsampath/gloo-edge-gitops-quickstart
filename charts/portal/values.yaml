@@ -1,0 +1,8 @@
+portalDomain: kameshs.me
+portalUrlPrefix: http://portal.kameshs.me
+portalSSLEnabled: false
+portalAuthEnabled: false
+oidcDefaultUsersGroup: users
+keycloakURL: http://keycloak.default.svc.local:8080
+keycloakRealm: master
+oidcClientId: gloo-demos-client

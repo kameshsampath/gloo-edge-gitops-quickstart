@@ -1,0 +1,25 @@
+#jinja2: lstrip_blocks: "True"
+spec:
+  destination:
+    server: "{{ api_status.connection.host }}"
+  source:
+    repoURL: "https://{{ git_url }}/{{ git_repo_name }}"
+    targetRevision: HEAD
+apps:
+  bookinfo:
+    enabled: {{ ( bookinfo_enabled or ecommerce_portal_enabled ) | default(false) }}
+    reviewsVersions: "{{ bookinfo_reviews_versions | default(['v1','v2','v3'])}}
+  ecommercePortal:
+    enabled: {{ ecommerce_portal_enabled | default(false) }}
+  httpbin: 
+    enabled: {{ ( httpbin_enabled or ecommerce_portal_enabled ) | default(false) }}
+  gloo:
+    namespace: gloo-system
+    portal:
+      namespace: gloo-portal
+      enabled: {{ gloo_portal_enabled | default(false) }}
+      monetization: {{  ( ecommerce_portal_enabled and gloo_portal_monetization_enabled )  | default(false) }}
+  keycloak:
+    enabled: {{ ( keycloak_enabled  or ecommerce_portal_enabled ) | default(false) }}
+  petstore:
+    enabled: {{ ( petstore_enabled or ecommerce_portal_enabled )  | default(false) }}

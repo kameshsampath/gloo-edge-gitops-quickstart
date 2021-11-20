@@ -1,0 +1,140 @@
+- name: "Setup Tools"
+  hosts: all
+  vars_files:
+    - vars.yml
+  vars:
+    bin_dir: "{{ playbook_dir }}/bin"
+    # only needed to download the tools
+    argocd_version: 2.1.6
+    gitea_version: 1.15.6
+  tasks:
+
+    - name: "Ensure bin directory"
+      ansible.builtin.file:
+        state: directory
+        path: "{{ bin_dir }}"
+
+    - name: "Download argocd cli(macOS)"
+      ansible.builtin.get_url:
+        url: "https://github.com/argoproj/argo-cd/releases/download/v{{ argocd_version }}/argocd-darwin-amd64"
+        dest: "{{ bin_dir }}/argocd"
+        mode: '0755'
+        timeout: 30
+      when: ansible_os_family == 'Darwin'
+
+    - name: "Download argocd cli(linux)"
+      ansible.builtin.get_url:
+        url: "https://github.com/argoproj/argo-cd/releases/download/v{{ argocd_version }}/argocd-linux-amd64"
+        dest: "{{ bin_dir }}/argocd"
+        mode: '0755'
+        timeout: 30
+      when: ansible_os_family == 'RedHat' or ansible_os_family == 'RedHat' 
+   
+    - name: "Download age (macOS)"
+      ansible.builtin.get_url:
+        url: "https://dl.filippo.io/age/latest?for=darwin/amd64"
+        dest: "{{ work_dir }}/age-amd64.tar.gz"
+        timeout: 30
+      when: ansible_os_family == 'Darwin'
+
+    - name: "Download age (linux)"
+      ansible.builtin.get_url:
+        url: "https://dl.filippo.io/age/latest?for=linux/amd64"
+        dest: "{{ work_dir }}/age-amd64.tar.gz"
+        timeout: 30
+      when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
+
+    - name: "Install age"
+      ansible.builtin.unarchive:
+        src: "{{ work_dir }}/age-amd64.tar.gz"
+        dest: "{{ bin_dir }}"
+        extra_opts:
+          - "--strip-components=1"
+          - "--exclude=README.md"
+          - "--exclude=LICENSE"
+
+    - name: "Download gitea (macOS)"
+      ansible.builtin.get_url:
+        url: "https://dl.gitea.io/gitea/{{ gitea_version }}/gitea-{{ gitea_version }}-darwin-10.12-amd64"
+        checksum: "sha256:https://dl.gitea.io/gitea/{{ gitea_version }}/gitea-{{ gitea_version }}-darwin-10.12-amd64.sha256"
+        dest: "{{ bin_dir }}/gitea"
+        mode: "0755"
+        timeout: 30
+      when: ansible_os_family == 'Darwin'
+
+    - name: "Download gitea (linux)"
+      ansible.builtin.get_url:
+        url: "https://dl.gitea.io/gitea/{{ gitea_version }}/gitea-{{ gitea_version }}-linux-amd64"
+        checksum: "sha256:https://dl.gitea.io/gitea/{{ gitea_version }}/gitea-{{ gitea_version }}-linux-amd64.sha256"
+        dest: "{{ bin_dir }}/gitea"
+        mode: "0755"
+      when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
+
+    - name: "Download Helm (macOS)"
+      ansible.builtin.get_url:
+        url: "https://get.helm.sh/helm-v{{ helm_version }}-darwin-amd64.tar.gz"
+        dest: "{{ work_dir }}/helm-v{{ helm_version }}-amd64.tar.gz"
+        checksum: "sha256:https://get.helm.sh/helm-v{{ helm_version}}-darwin-amd64.tar.gz.sha256sum"
+        timeout: 30
+      when: ansible_os_family == 'Darwin'
+
+    - name: "Download Helm (linux) "
+      ansible.builtin.get_url:
+        url: "https://get.helm.sh/helm-v{{ helm_version }}-linux-amd64.tar.gz"
+        dest: "{{ work_dir }}/helm-v{{ helm_version }}-amd64.tar.gz"
+        checksum: "sha256:https://get.helm.sh/helm-v{{ helm_version }}-darwin-amd64.tar.gz.sha256sum.asc"
+        timeout: 30
+      when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
+
+    - name: "Install Helm"
+      ansible.builtin.unarchive:
+        src: "{{ work_dir }}/helm-v{{ helm_version }}-amd64.tar.gz"
+        dest: "{{ bin_dir }}"
+        extra_opts:
+          - "--strip-components=1"
+          - "--exclude=README.md"
+          - "--exclude=LICENSE"
+    
+    - name: "Ensure Helm Diff plugin is installed"
+      kubernetes.core.helm_plugin:
+        plugin_path: https://github.com/databus23/helm-diff
+        state: present
+        context: mgmt
+
+    - name: "Ensure Helm Secrets plugin is installed"
+      kubernetes.core.helm_plugin:
+        plugin_path: https://github.com/jkroepke/helm-secrets
+        state: present
+        context: mgmt
+    
+    - name: "Download kubectl(macOS)"
+      ansible.builtin.get_url:
+        url: "https://dl.k8s.io/release/v{{ kubectl_version }}/bin/darwin/amd64/kubectl"
+        dest: "{{ bin_dir }}/kubectl"
+        timeout: 30
+        mode: '0755'
+      when: ansible_os_family == 'Darwin'
+
+    - name: "Download kubectl(macOS)"
+      ansible.builtin.get_url:
+        url: "https://dl.k8s.io/release/v{{ kubectl_version }}/bin/linux/amd64/kubectl"
+        dest: "{{ bin_dir }}"
+        mode: '0755'
+        timeout: 30
+      when: ansible_os_family == 'RedHat' or ansible_os_family == 'RedHat'
+
+    - name: "Download sops (macOS)"
+      ansible.builtin.get_url:
+        url: "https://github.com/mozilla/sops/releases/download/v{{ sops_version }}/sops-v{{ sops_version }}.darwin"
+        dest: "{{ bin_dir }}/sops"
+        mode: '0755'
+        timeout: 30
+      when: ansible_os_family == 'Darwin'
+
+    - name: "Download sops (linux)"
+      ansible.builtin.get_url:
+        url: "https://github.com/mozilla/sops/releases/download/v{{ sops_version }}/sops-v{{ sops_version }}.linux"
+        dest: "{{ bin_dir }}/sops"
+        mode: '0755'
+        timeout: 30
+      when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'

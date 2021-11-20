@@ -1,0 +1,9 @@
+apiVersion: portal.gloo.solo.io/v1beta1
+kind: APIDoc
+metadata:
+  name:  apidoc-v1-httpbin
+  namespace: {{ .Release.Namespace }}
+spec:
+  openApi:
+    content:
+      fetchUrl: https://raw.githubusercontent.com/Azure/api-management-samples/master/apis/httpbin.swagger.json

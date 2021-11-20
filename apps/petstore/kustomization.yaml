@@ -1,0 +1,10 @@
+namespace: default
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+resources:
+  - petstore-v1.yaml
+  - petstore-v1-service.yaml
+  - petstore-v2.yaml
+  - petstore-v2-service.yaml

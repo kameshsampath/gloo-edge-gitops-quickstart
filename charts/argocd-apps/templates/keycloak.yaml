@@ -1,0 +1,30 @@
+{{- if .Values.apps.keycloak.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keycloak
+  namespace: {{ .Release.Namespace }}
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: {{ .Values.spec.source.repoURL }}
+    path: charts/keycloak
+    targetRevision: {{ .Values.spec.source.targetRevision }}
+    helm:
+      parameters: []
+      valueFiles:
+        # The age encrypted secrets.yaml is decrypted using the `key.txt` that # is mounted on to argocd-repo-server pod via  # helm-secrets-private-keys volume
+        - secrets+age-import:///helm-secrets-private-keys/key.txt?../../../helm_vars/keycloak/secrets.yaml
+        - ../../../helm_vars/keycloak/values.yaml
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: {{ .Values.apps.keycloak.namespace }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+{{- end }}

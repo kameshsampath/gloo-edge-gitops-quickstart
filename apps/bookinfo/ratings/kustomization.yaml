@@ -1,0 +1,4 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+ - "github.com/kameshsampath/istio//samples/bookinfo/platform/kube/ratings?ref=kustomize-1-11-4"

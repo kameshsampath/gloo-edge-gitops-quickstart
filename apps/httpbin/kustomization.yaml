@@ -1,0 +1,9 @@
+namespace: default
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+resources:
+  - httpbin-sa.yaml
+  - httpbin-service.yaml
+  - httpbin.yaml

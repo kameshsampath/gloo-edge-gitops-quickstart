@@ -1,0 +1,44 @@
+work_dir: "{{ playbook_dir }}/work"
+kubeconfig_dir: "{{ work_dir }}/.kube"
+minikube_kubernetes_version: v1.21.6
+minikube_home_dir: "{{ work_dir }}/.minikube"
+helm_version: 3.7.1
+helm_secrets_plugin_version: 3.10.0
+sops_version: 3.7.1
+kubectl_version: 1.21.6
+# minikube Kubernetes Clusters
+minikube_profiles:
+  # cluster where management and infrastructure components are deployed
+  # e.g. gitea, argocd
+  mgmt:
+    create: yes
+    destroy: no
+    addons:
+      - metallb
+    lbStartIP: 192.168.64.80
+    lbEndIP: 192.168.64.90
+  cluster1:
+    create: yes
+    destroy: no
+    addons:
+      - metallb
+    lbStartIP: 192.168.64.100
+    lbEndIP: 192.168.64.110
+  cluster2:
+    create: no
+    destroy: no
+    addons:
+      - metallb
+    lbStartIP: 192.168.64.120
+    lbEndIP: 192.168.64.130
+# Gloo Edge Kubernetes clusters
+gloo_clusters:
+  cluster1:
+    cloud: minikube
+    k8s_context: cluster1
+    install_istio: yes
+    cluster_name: cluster1
+    enable_portal: yes
+
+# Gitea
+gitea_tls_cert_path: "{{ work_dir}}/ssl/gitea-tls.crt"

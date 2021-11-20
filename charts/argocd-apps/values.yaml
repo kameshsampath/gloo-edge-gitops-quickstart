@@ -1,0 +1,27 @@
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: https://github.com/kameshsampath/gloo-edge-gitops-quickstart
+    targetRevision: HEAD
+apps:
+  bookinfo:
+    enabled: false
+    reviewsVersions: 
+      - v1
+      - v2
+      - v3
+  ecommercePortal:
+    enabled: false
+  httpbin: 
+    enabled: false
+  gloo:
+    namespace: gloo-system
+    portal:
+      namespace: gloo-portal
+      enabled: false
+      monetization: false
+  keycloak:
+    enabled: false
+  petstore:
+    enabled: false

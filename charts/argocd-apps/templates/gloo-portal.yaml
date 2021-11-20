@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+{{- if .Values.apps.gloo.portal.enabled }}
+kind: Application
+metadata:
+  name: gloo-dev-portal
+  namespace: {{ .Release.Namespace }}
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: {{ .Values.spec.source.repoURL }}
+    path: infrastructure/gloo/portal
+    targetRevision: {{ .Values.spec.source.targetRevision }}
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: {{ .Values.apps.gloo.portal.namespace }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+{{- end }}

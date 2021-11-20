@@ -1,0 +1,13 @@
+apiVersion: portal.gloo.solo.io/v1beta1
+kind: Group
+metadata:
+  name: users
+  namespace: {{ .Release.Namespace }}
+spec:
+  displayName: corporate users
+  accessLevel:
+    portals:
+    - name: ecommerce-portal
+      namespace: default
+  oidcGroup:
+    groupName: {{ .Values.oidcDefaultUsersGroup }}

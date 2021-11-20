@@ -1,0 +1,182 @@
+- name: "Setup Argocd"
+  hosts: all
+  vars_files:
+    - vars.yml
+  tasks:
+    
+    - name: "Set Argocd Kube Context"
+      set_fact:
+        argocd_k8s_context: "{{ item.key }}"
+      loop: "{{ lookup('dict', minikube_profiles ) }}"
+      loop_control:
+        label: "{{ item.key }}"
+      when: item.key == 'mgmt'
+
+    - name: "Fail when argocd Kubecontext not found"
+      fail:
+        msg: "Argocd Kube Context is not defined"
+      when: argocd_k8s_context is not defined 
+
+    - name: "Ensure we are in mgmt context"
+      ansible.builtin.command:
+        argv:
+          - kubectl 
+          - config 
+          - use-context
+          - "{{ argocd_k8s_context }}"
+      environment:
+        KUBECONFIG: "{{ work_dir }}/.kube/config"
+    
+    - name: "Ensure helm-secrets-private-keys secret exists"
+      kubernetes.core.k8s_info:
+        name: helm-secrets-private-keys
+        namespace: argocd
+        kind: Secret
+        context: "{{ argocd_k8s_context }}"
+      register: helm_secrets_result
+
+    - fail:
+        msg: "No helm-secrets-private-keys found"
+      when: helm_secrets_result.resources | length <= 0
+
+    - name: "Add Argocd Helm Repo"
+      kubernetes.core.helm_repository:
+        name: argo
+        repo_url: "https://argoproj.github.io/argo-helm"
+
+    - name: "Query Argocd Versions"
+      ansible.builtin.command:
+        argv:
+          - helm
+          - search 
+          - repo
+          - argo/argo-cd
+          - -ojson
+      register: argocd_version_info
+      changed_when: false
+
+    - name: "Fail when version argocd info does not exist"
+      fail:
+        msg: "Gitea Version not available"
+      when: argocd_version is not defined and argocd_version_info.stdout is not defined
+
+    - name: "Set Argocd Version"
+      set_fact:
+        argocd_chart_version: "{{ argocd_version_info.stdout  | from_json | first | community.general.json_query('version') }}"
+        argocd_version: "{{ argocd_version_info.stdout  | from_json | first | community.general.json_query('app_version') }}"
+
+    - name: "Argocd Version"
+      debug: 
+        var: argocd_version
+    
+    - name: "Generate argo-cd config"
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/templates/argocd/argocd-values.yaml.j2"
+        dest: "{{ work_dir }}/argocd-values.yaml"
+        variable_start_string: '[['
+        variable_end_string: ']]'
+
+    - name: "Deploy Argocd"
+      kubernetes.core.helm:
+        release_name: argocd
+        chart_ref: argo/argo-cd
+        release_namespace: argocd
+        create_namespace: yes
+        chart_version: "{{ argocd_chart_version }}"
+        values_files:
+           - "{{ work_dir }}/argocd-values.yaml"
+        update_repo_cache: yes
+        context: "{{ argocd_k8s_context }}"
+        wait: yes
+
+    - name: "Get Argocd Inital admin Password"
+      kubernetes.core.k8s_info:
+        kind: Secret
+        name: argocd-initial-admin-secret
+        namespace: argocd
+        context: "{{ argocd_k8s_context }}"
+      register: argocd_initial_admin_secret_result
+    
+    - name: "Set Argocd Admin user password fact"
+      set_fact:
+        argocd_admin_password: "{{ argocd_initial_admin_secret_result.resources[0].data.password | b64decode }}"
+      when: argocd_initial_admin_secret_result.resources | length == 1
+
+    - name: "Get Argocd Server Service"
+      kubernetes.core.k8s_info:
+        kind: Service
+        name: argocd-server
+        namespace: argocd
+        context: "{{ argocd_k8s_context }}"
+      register: argcod_server_svc_result
+
+    - name: "Set Argocd Service fact"
+      set_fact:
+        argocd_server_address: "{{ argcod_server_svc_result.resources[0].status.loadBalancer.ingress[0].ip }}"
+  
+    # - debug: 
+    #     var: argocd_initial_admin_secret_result
+
+    - name: "Save the password to file"
+      copy:
+        dest: "{{ work_dir }}/argocd_admin.password"
+        content: "{{ argocd_admin_password }}"
+      when: argocd_admin_password is defined
+
+    - name: "Login into Argocd as 'admin'"
+      ansible.builtin.command:
+        argv:
+          - argocd
+          - login
+          - "--insecure"
+          - "--username=admin"
+          - "--password={{ argocd_admin_password }}"
+          - "{{ argocd_server_address }}"
+      environment:
+        KUBECONFIG: "{{ work_dir }}/.kube/config"
+      when: argocd_admin_password is defined
+
+    - name: "Update into argocd 'admin' password to 'password' "
+      ansible.builtin.command:
+        argv:
+          - argocd
+          - account
+          - update-password
+          - --insecure
+          - --account=admin
+          - --new-password=password
+          - --current-password={{ argocd_admin_password }}
+          - --server={{ argocd_server_address }}
+      environment:
+        KUBECONFIG: "{{ work_dir }}/.kube/config"
+      when: argocd_admin_password is defined
+
+    - name: "Save the neew password to file"
+      copy:
+        dest: "{{ work_dir }}/argocd_admin.password"
+        content: "password"
+      when: argocd_admin_password is defined
+    
+    - name: "Get Argocd Inital admin Password"
+      kubernetes.core.k8s_info:
+        kind: Secret
+        name: argocd-initial-admin-secret
+        namespace: argocd
+        context: "{{ argocd_k8s_context }}"
+        state: absent
+      when: argocd_admin_password is defined
+
+    - name: "Register Clusters with Argocd"
+      ansible.builtin.command:
+        argv:
+          - argocd
+          - cluster
+          - add
+          - --insecure
+          - --server={{ argocd_server_address }}
+          - "{{ item.value.k8s_context }}"
+      loop: "{{ gloo_clusters | dict2items }}"
+      environment:
+        KUBECONFIG: "{{ work_dir }}/.kube/config"
+      loop_control:
+        label: "{{ item.key }}"

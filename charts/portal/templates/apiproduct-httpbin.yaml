@@ -1,0 +1,24 @@
+apiVersion: portal.gloo.solo.io/v1beta1
+kind: APIProduct
+metadata:
+  name: httpbin-product
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: httpbin
+spec:
+  displayInfo: 
+    title: Httpbin Product
+    description: API Product for Httpbin service
+  versions:
+  - name: v1
+    apis:
+      - apiDoc:
+          name: apidoc-v1-httpbin
+          namespace: default
+    gatewayConfig:
+      route:
+        inlineRoute:
+          backends:
+            - upstream:
+                name: default-httpbin-8000
+                namespace: gloo-system

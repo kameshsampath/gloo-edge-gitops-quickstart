@@ -1,0 +1,35 @@
+- hosts: all
+
+  vars:
+    work_dir: "{{ playbook_dir }}/work"
+    kubeconfig_dir: "{{ work_dir }}/.kube"
+    minikube_profiles:
+      mgmt:
+        create: no
+        destroy: yes
+      cluster1:
+        create: no
+        destroy: yes
+      cluster2:
+        create: no
+        destroy: yes
+  roles:
+    - role: kameshsampath.minikube
+  tasks:
+    - name: "Cleanup work directories"
+      ansible.builtin.file:
+        state: absent
+        path: "{{ item }}"
+      loop:
+        - "{{ work_dir }}/.kube"
+        - "{{ work_dir }}/ssl"
+
+    - name: "Cleanup work files"
+      ansible.builtin.file:
+        state: absent
+        path: "{{ item }}"
+      with_fileglob:
+        - "{{ work_dir }}/*.yaml"
+        - "{{ work_dir }}/*.yml"
+        - "{{ work_dir }}/*.tar.gz"
+        - "{{ work_dir }}/*.password"

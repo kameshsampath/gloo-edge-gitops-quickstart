@@ -1,0 +1,24 @@
+apiVersion: portal.gloo.solo.io/v1beta1
+kind: APIProduct
+metadata:
+  name: bookinfo-product
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: bookinfo
+spec:
+  displayInfo: 
+    title: BookInfo Product
+    description: API Product for BookInfo service
+  versions:
+  - name: v1
+    apis:
+      - apiDoc:
+          name: apidoc-v1-bookinfo
+          namespace: default
+    gatewayConfig:
+      route:
+        inlineRoute:
+          backends:
+            - upstream:
+                name: bookinfo-productpage-9080
+                namespace: gloo-system

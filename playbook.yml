@@ -1,0 +1,4 @@
+- name: "Download Tools"
+  import_playbook: playbooks/tools.yml
+- name: "Create minikube Clusters"
+  import_playbook: playbooks/clusters.yml
