@@ -552,8 +552,8 @@
 </tr>
 </tbody>
 </table>
-<p>Navigate to the <code>$TUTORIAL_HOME</code>,</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> <span class="nv">$TUTORIAL_HOME</span>
+<p>Navigate to the <code>$DEMO_HOME</code>,</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> <span class="nv">$DEMO_HOME</span>
 </code></pre></div>
 <h3 id="ansible-variables-file">Ansible Variables File<a class="headerlink" href="#ansible-variables-file" title="Permanent link">&para;</a></h3>
 <p>All Ansible variables used in this demo is configured using the file <code>vars.yml</code>, edit it suit your settings.</p>
@@ -721,7 +721,12 @@
 <h2 id="setup-kubernetes-clusters">Setup Kubernetes Clusters<a class="headerlink" href="#setup-kubernetes-clusters" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>make clusters
 </code></pre></div>
+<p>The task creates the kubernetes clusters configured using <code>minikube_profiles</code> and also downloads the compatible tools to <code>$DEMO_HOME/bin</code>.</p>
+<p>Add the <code>$DEMO_HOME/bin</code> to your path to make sure the right versions of the tools are used,</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$DEMO_HOME</span><span class="s2">/bin:</span><span class="nv">$PATH</span><span class="s2">&quot;</span>
+</code></pre></div>
 <h2 id="deploy-gitea">Deploy Gitea<a class="headerlink" href="#deploy-gitea" title="Permanent link">&para;</a></h2>
+<p>As part of the demo we will use locally hosted <a href="https://gitea.io">Gite</a> git repository,</p>
 <div class="highlight"><pre><span></span><code>make deploy-gitea
 </code></pre></div>
 <h2 id="create-age-key">Create age key<a class="headerlink" href="#create-age-key" title="Permanent link">&para;</a></h2>
@@ -736,25 +741,22 @@
 <p>Ensure the sops configration <code>.sops.yml</code> is updated with your <em>age</em> publickey,</p>
 <div class="highlight"><pre><span></span><code>yq <span class="nb">eval</span> <span class="s1">&#39;.creation_rules[0].age |= strenv(SOPS_AGE_RECIPIENTS)&#39;</span> .sops.yml 
 </code></pre></div>
-<p>We need to make the age key to be available to the Argocd repo server so that it can decrypt the secrets,</p>
+<h2 id="deploy-argocd">Deploy Argocd<a class="headerlink" href="#deploy-argocd" title="Permanent link">&para;</a></h2>
+<p>Argocd has to be customized to allow decrypting of secrets using the age key. The <a href="./helm_vars/argocd/values.yaml">values.yaml</a> will do extra configure overrides when deploying Argocd:</p>
+<ul>
+<li>does patch the Argocd&rsquo;s argocd-repo-server deployment to mount the secret-keys as repo-server volume.</li>
+<li>install the helm plugin and age tools and make it available as <code>custom-tools</code> volumes.</li>
+</ul>
+<p>We also need to make sure the age key is to be available to the Argocd repo server so that it can decrypt the secerts while deploying the resources via helm,</p>
 <div class="highlight"><pre><span></span><code>kubectl create ns argocd
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>kubectl create secret generic helm-secrets-private-keys <span class="se">\</span>
   --namespace<span class="o">=</span>argocd <span class="se">\</span>
   --from-file<span class="o">=</span>key.txt<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$SOPS_AGE_KEY_FILE</span><span class="s2">&quot;</span>
 </code></pre></div>
-<h2 id="deploy-argocd">Deploy Argocd<a class="headerlink" href="#deploy-argocd" title="Permanent link">&para;</a></h2>
-<p>Deploy Argocd,</p>
+<p>Now we are good deploy argocd by running the comand</p>
 <div class="highlight"><pre><span></span><code>make deploy-argocd
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The <a href="./helm_vars/argocd/values.yaml">values.yaml</a> will do extra configure overrides when deploying Argocd: </p>
-<ul>
-<li>does patch the Argocd&rsquo;s argocd-repo-server deployment to mount the secret-keys as repo-server volume</li>
-<li>install the helm plugin and age tools and make it available as <code>custom-tools</code> volumes</li>
-</ul>
-</div>
                 
                   
                 

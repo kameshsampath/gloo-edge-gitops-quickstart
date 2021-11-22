@@ -559,11 +559,11 @@
 <div class="highlight"><pre><span></span><code>git clone https://github.com/kameshsampath/gloo-edge-gitops-quickstart
 <span class="nb">cd</span> gloo-edge-gitops-quickstart
 </code></pre></div>
-<p>For convinience, we will refer the clone demo sources folder as <code>$TUTORIAL_HOME</code>,</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">TUTORIAL_HOME</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$PWD</span><span class="s2">&quot;</span>
+<p>For convinience, we will refer the clone demo sources folder as <code>$DEMO_HOME</code>,</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">DEMO_HOME</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$PWD</span><span class="s2">&quot;</span>
 </code></pre></div>
 <p>Navigate to the project home,</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> <span class="nv">$TUTORIAL_HOME</span>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> <span class="nv">$DEMO_HOME</span>
 </code></pre></div>
 <h2 id="ensure-poetry">Ensure Poetry<a class="headerlink" href="#ensure-poetry" title="Permanent link">&para;</a></h2>
 <p>The project uses <a href="https://python-poetry.org">poetry</a> to setup Python3 virtual environment to run ansible scripts. You can use <code>pipx</code> to install poetry like,</p>
@@ -572,17 +572,17 @@
 <p>Lets ensure <code>poetry</code> is setup correctly, running the following command should return the version of the installed <code>poetry</code> utility.</p>
 <div class="highlight"><pre><span></span><code>poetry --version
 </code></pre></div>
-<p>Let us configure <code>poetry</code> to create the python3 virutalenv in the project directory <code>$TUTORIAL_HOME</code>,</p>
+<p>Let us configure <code>poetry</code> to create the python3 virutalenv in the project directory <code>$DEMO_HOME</code>,</p>
 <div class="highlight"><pre><span></span><code>poetry config  virtualenvs.in-project <span class="nb">true</span>
 </code></pre></div>
 <h2 id="ansible-environment">Ansible Environment<a class="headerlink" href="#ansible-environment" title="Permanent link">&para;</a></h2>
 <p>To create the virutal environment run the following command,</p>
 <div class="highlight"><pre><span></span><code>make create-venv
 </code></pre></div>
-<p>The command will instal all the required python modules in the <code>$TUTORIAL_HOME/.venv</code>.</p>
+<p>The command will instal all the required python modules in the <code>$DEMO_HOME/.venv</code>.</p>
 <p>Install the ansible roles and collections that will be used by the playbooks,</p>
-<div class="highlight"><pre><span></span><code>poetry run ansible-galaxy role install -r <span class="nv">$TUTORIAL_HOME</span>/requirements.yml
-poetry run ansible-galaxy collection install -r <span class="nv">$TUTORIAL_HOME</span>/requirements.yml
+<div class="highlight"><pre><span></span><code>poetry run ansible-galaxy role install -r <span class="nv">$DEMO_HOME</span>/requirements.yml
+poetry run ansible-galaxy collection install -r <span class="nv">$DEMO_HOME</span>/requirements.yml
 </code></pre></div>
                 
                   
