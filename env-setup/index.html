@@ -1,0 +1,839 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="canonical" href="https://kameshsampath.github.com/gloo-edge-gitops-quickstart/env-setup/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
+    
+    
+      
+        <title>Envrionment Setup - Gloo Edge GitOps Quickstart</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.a57b2b03.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Red+Hat+Display:300,400,400i,700%7C&display=fallback">
+        <style>:root{--md-text-font-family:"Red Hat Display";--md-code-font-family:""}</style>
+      
+    
+    
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#demo-environment" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Gloo Edge GitOps Quickstart" class="md-header__button md-logo" aria-label="Gloo Edge GitOps Quickstart" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Gloo Edge GitOps Quickstart
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Envrionment Setup
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Gloo Edge GitOps Quickstart" class="md-nav__button md-logo" aria-label="Gloo Edge GitOps Quickstart" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Gloo Edge GitOps Quickstart
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools-and-sources/" class="md-nav__link">
+        Tools and Sources
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Environment Setup
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Environment Setup
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#demo-environment" class="md-nav__link">
+    Demo Environment
+  </a>
+  
+    <nav class="md-nav" aria-label="Demo Environment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ansible-variables-file" class="md-nav__link">
+    Ansible Variables File
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-kubernetes-clusters" class="md-nav__link">
+    Setup Kubernetes Clusters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-gitea" class="md-nav__link">
+    Deploy Gitea
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-age-key" class="md-nav__link">
+    Create age key
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-argocd" class="md-nav__link">
+    Deploy Argocd
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gitops/" class="md-nav__link">
+        Deploy Argocd Applications
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clean-up/" class="md-nav__link">
+        Clean Up
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Appendix
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Appendix" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Appendix
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ansible-roles.md" class="md-nav__link">
+        Ansible Roles
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        Troubleshooting
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#demo-environment" class="md-nav__link">
+    Demo Environment
+  </a>
+  
+    <nav class="md-nav" aria-label="Demo Environment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ansible-variables-file" class="md-nav__link">
+    Ansible Variables File
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-kubernetes-clusters" class="md-nav__link">
+    Setup Kubernetes Clusters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-gitea" class="md-nav__link">
+    Deploy Gitea
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-age-key" class="md-nav__link">
+    Create age key
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-argocd" class="md-nav__link">
+    Deploy Argocd
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>Environment Setup</h1>
+                
+                <p>At the end of this chapter you would have,</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Two Kubernetes Clusters  mgmt and cluster1 on minikube</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Argocd and Gitea will be installed into <strong>mgmt</strong> cluster</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>cluster1</strong> will act as application workload where Gloo Edge, Portal and demo applications will be installed.</li>
+</ul>
+<h2 id="demo-environment">Demo Environment<a class="headerlink" href="#demo-environment" title="Permanent link">&para;</a></h2>
+<p>The following tables shows the environment to component matrix.</p>
+<table>
+<thead>
+<tr>
+<th>Components</th>
+<th>mgmt</th>
+<th>cluster1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kubernetes</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+</tr>
+<tr>
+<td>Kubernetes Context Name</td>
+<td>mgmt</td>
+<td>cluster1</td>
+</tr>
+<tr>
+<td>Argocd</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg></span></td>
+</tr>
+<tr>
+<td>Gitea</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg></span></td>
+</tr>
+<tr>
+<td>Gloo Edge</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg></span></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+</tr>
+<tr>
+<td>Gloo Portal</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg></span></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+</tr>
+<tr>
+<td>Keycloak</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg></span></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+</tr>
+<tr>
+<td>bookinfo</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+</tr>
+<tr>
+<td>httpbin</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+</tr>
+<tr>
+<td>keycloak</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+</tr>
+<tr>
+<td>petstore</td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+<td><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 7 9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg></span></td>
+</tr>
+</tbody>
+</table>
+<p>Navigate to the <code>$TUTORIAL_HOME</code>,</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> <span class="nv">$TUTORIAL_HOME</span>
+</code></pre></div>
+<h3 id="ansible-variables-file">Ansible Variables File<a class="headerlink" href="#ansible-variables-file" title="Permanent link">&para;</a></h3>
+<p>All Ansible variables used in this demo is configured using the file <code>vars.yml</code>, edit it suit your settings.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>work_dir</code></td>
+<td>The demo work directory</td>
+<td><code>{{ playbook_dir }}/work</code>. Any file in this diectory is excluded by git.</td>
+</tr>
+<tr>
+<td><code>gcp_vpkubeconfig_dirn_name</code></td>
+<td>The kubeconfig directory</td>
+<td><code>{{ work_dir }}/.kube</code></td>
+</tr>
+<tr>
+<td><code>minikube_kubernetes_version</code></td>
+<td>The kubernetes version to use with minikube</td>
+<td>v1.21.6</td>
+</tr>
+<tr>
+<td><code>minikube_home_dir</code></td>
+<td>The minikube home directory</td>
+<td><code>{{ work_dir }}/.minikube</code></td>
+</tr>
+<tr>
+<td><code>helm_version</code></td>
+<td>The helm.sh version to use</td>
+<td>3.7.1</td>
+</tr>
+<tr>
+<td><code>helm_secrets_plugin_version</code></td>
+<td>The helm secerts plugin version</td>
+<td>3.10.0</td>
+</tr>
+<tr>
+<td><code>sops_version</code></td>
+<td>The sops version</td>
+<td>3.7.1</td>
+</tr>
+<tr>
+<td><code>kubectl_version</code></td>
+<td>The kubectl version</td>
+<td>1.21.6</td>
+</tr>
+<tr>
+<td><code>gitea_tls_cert_path</code></td>
+<td>The self signed certified to use with gitea</td>
+<td><code>{{ work_dir}}/ssl/gitea-tls.crt</code></td>
+</tr>
+<tr>
+<td><code>github_template_repo</code></td>
+<td>GitHub Template Repo</td>
+<td>https://github.com/kameshsampath/gloo-edge-gitops-quickstart</td>
+</tr>
+<tr>
+<td><code>argocd_app_cleanup</code></td>
+<td>Delete Argocd applictions</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>git_target_revision</code></td>
+<td>The Git revision to use</td>
+<td>HEAD</td>
+</tr>
+<tr>
+<td><code>gloo_system_namespace</code></td>
+<td>The namespce to deploy Gloo Edge</td>
+<td><code>gloo-system</code></td>
+</tr>
+<tr>
+<td><code>gloo_portal_namespace</code></td>
+<td>The namespace deploy Gloo Portal</td>
+<td><code>gloo-portal</code></td>
+</tr>
+<tr>
+<td><code>bookinfo_enabled</code></td>
+<td>The kubernetes context that will be used to query Istio resources</td>
+<td><code>no</code>. If <code>ecommerce_portal_enabled</code> is <code>yes</code> the bookinfo is deployed by default.</td>
+</tr>
+<tr>
+<td><code>bookinfo_reviews_versions</code></td>
+<td>The versions of bookinfo reviews</td>
+<td><code>v1</code>, <code>v2</code> and <code>v3</code></td>
+</tr>
+<tr>
+<td><code>ecommerce_portal_enabled</code></td>
+<td>Deploy <code>ecommerce</code> demo portal application</td>
+<td><code>no</code>.</td>
+</tr>
+<tr>
+<td><code>httpbin_enabled</code></td>
+<td>Deploy httpbin application</td>
+<td><code>no</code>. If <code>ecommerce_portal_enabled</code> is <code>yes</code> the httpbin is deployed by default.</td>
+</tr>
+<tr>
+<td><code>gloo_portal_enabled</code></td>
+<td>Deploy Gloo portal</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>gloo_portal_monetization_enabled</code></td>
+<td>no</td>
+<td></td>
+</tr>
+<tr>
+<td><code>keycloak_enabled</code></td>
+<td>Deploy keycloak</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>petstore_enabled</code></td>
+<td>Deploy petstore application</td>
+<td><code>no</code>. If <code>ecommerce_portal_enabled</code> is <code>yes</code> the petstore is deployed by default.</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>minikube_profiles</code> defines the minikube cluster(s) that will be created for the demo environment,</p>
+<div class="highlight"><pre><span></span><code><span class="nt">minikube_profiles</span><span class="p">:</span>
+  <span class="c1"># minikube profile name and the same will used the k8s context name for this cluster</span>
+  <span class="nt">mgmt</span><span class="p">:</span>
+    <span class="c1"># The create minikube</span>
+    <span class="nt">create</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">yes</span>
+    <span class="c1"># The destory minikube</span>
+    <span class="nt">destroy</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no</span>
+    <span class="c1"># The minikube addons to configure</span>
+    <span class="nt">addons</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">metallb</span>
+    <span class="c1"># the metallb LoadBalancer Start IP</span>
+    <span class="nt">lbStartIP</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">192.168.64.80</span>
+    <span class="c1"># the metallb LoadBalancer End IP</span>
+    <span class="nt">lbEndIP</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">192.168.64.90</span>
+  <span class="nt">cluster1</span><span class="p">:</span>
+    <span class="nt">create</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">yes</span>
+    <span class="nt">destroy</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no</span>
+    <span class="nt">addons</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">metallb</span>
+    <span class="nt">lbStartIP</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">192.168.64.100</span>
+    <span class="nt">lbEndIP</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">192.168.64.110</span>
+  <span class="nt">cluster2</span><span class="p">:</span>
+    <span class="nt">create</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no</span>
+    <span class="nt">destroy</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no</span>
+    <span class="nt">addons</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">metallb</span>
+    <span class="nt">lbStartIP</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">192.168.64.120</span>
+    <span class="nt">lbEndIP</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">192.168.64.130</span>
+</code></pre></div>
+<p>For more information on the variables check the Ansible role <a href="https://github.com/kameshsampath/ansible-role-minikube">minikube</a>.</p>
+<p>The <code>gloo_clusters</code> variable by default has the following values, refer to the <a href="./#demo-environment">component matrix</a> above to understand what this dictionary key/value represents.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">gloo_clusters</span><span class="p">:</span>
+  <span class="nt">cluster1</span><span class="p">:</span>
+    <span class="nt">cloud</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minikube</span>
+    <span class="nt">k8s_context</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cluster1</span>
+    <span class="nt">install_istio</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">yes</span>
+    <span class="nt">cluster_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cluster1</span>
+    <span class="nt">enable_portal</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">yes</span>
+</code></pre></div>
+<h2 id="setup-kubernetes-clusters">Setup Kubernetes Clusters<a class="headerlink" href="#setup-kubernetes-clusters" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>make clusters
+</code></pre></div>
+<h2 id="deploy-gitea">Deploy Gitea<a class="headerlink" href="#deploy-gitea" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>make deploy-gitea
+</code></pre></div>
+<h2 id="create-age-key">Create age key<a class="headerlink" href="#create-age-key" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>age-keygen -o key.txt
+</code></pre></div>
+<p>Move the <code>key.txt</code> to secure place, preferably <code>$HOME/.ssh</code>. Assuming you moved it to <code>$HOME/.ssh</code>, lets set that as local environment variables for convinience:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">SOPS_AGE_KEY_FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.ssh/key.txt&quot;</span>
+</code></pre></div>
+<p>Also note and export the <strong>publickey</strong> in the <code>$SOPS_AGE_KEY_FILE</code> as <code>$SOPS_AGE_RECIPIENTS</code></p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">SOPS_AGE_RECIPIENTS</span><span class="o">=</span><span class="k">$(</span>cat <span class="nv">$SOPS_AGE_KEY_FILE</span>  <span class="p">|</span> awk <span class="s1">&#39;NR==2{ print $4}&#39;</span><span class="k">)</span>
+</code></pre></div>
+<p>Ensure the sops configration <code>.sops.yml</code> is updated with your <em>age</em> publickey,</p>
+<div class="highlight"><pre><span></span><code>yq <span class="nb">eval</span> <span class="s1">&#39;.creation_rules[0].age |= strenv(SOPS_AGE_RECIPIENTS)&#39;</span> .sops.yml 
+</code></pre></div>
+<p>We need to make the age key to be available to the Argocd repo server so that it can decrypt the secrets,</p>
+<div class="highlight"><pre><span></span><code>kubectl create ns argocd
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>kubectl create secret generic helm-secrets-private-keys <span class="se">\</span>
+  --namespace<span class="o">=</span>argocd <span class="se">\</span>
+  --from-file<span class="o">=</span>key.txt<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$SOPS_AGE_KEY_FILE</span><span class="s2">&quot;</span>
+</code></pre></div>
+<h2 id="deploy-argocd">Deploy Argocd<a class="headerlink" href="#deploy-argocd" title="Permanent link">&para;</a></h2>
+<p>Deploy Argocd,</p>
+<div class="highlight"><pre><span></span><code>make deploy-argocd
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a href="./helm_vars/argocd/values.yaml">values.yaml</a> will do extra configure overrides when deploying Argocd: </p>
+<ul>
+<li>does patch the Argocd&rsquo;s argocd-repo-server deployment to mount the secret-keys as repo-server volume</li>
+<li>install the helm plugin and age tools and make it available as <code>custom-tools</code> volumes</li>
+</ul>
+</div>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../tools-and-sources/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tools and Sources" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Tools and Sources
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../gitops/" class="md-footer__link md-footer__link--next" aria-label="Next: Deploy Argocd Applications" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Deploy Argocd Applications
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        
+          Made with
+          <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+            Material for MkDocs
+          </a>
+        
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "content.tabs.link"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.b1047164.min.js"></script>
+      
+    
+  </body>
+</html>
