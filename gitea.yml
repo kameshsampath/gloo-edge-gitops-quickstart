@@ -120,7 +120,6 @@
       tags:
         - gitea
 
-# Repo Configuration
 
 # Setup Gitea for external access
  
@@ -277,3 +276,56 @@
         state: present
       tags:
         - gitea-gloo
+
+# Repo Configuration
+    - name: "Query Git url"
+      kubernetes.core.k8s_info:
+        kind: Service
+        name: gateway-proxy
+        namespace: gitea
+        context: "{{ gitea_k8s_context }}"
+      register: git_service_result
+      when: gitops_repo_url is not defined
+      tags:
+        - gitea-gloo
+
+    - name: "Set Gitea Repo Facts"
+      set_fact:
+        git_url: "https://gitea-{{ git_service_result.resources[0] | json_query(q) | first }}.nip.io"
+        git_repo_fqn: "https://gitea-{{ git_service_result.resources[0] | json_query(q) | first }}.nip.io/{{ gitea_admin_user.username }}/{{ github_template_repo | basename }}"
+        gitea_repo_name: "{{ github_template_repo | basename }}"
+      vars:
+        q: "status.loadBalancer.ingress[*].ip"
+      tags:
+        - gitea-gloo
+
+    - name: "Clone the template repo from github"
+      uri:
+        url: "{{ git_url }}/api/v1/repos/migrate"
+        user: "{{ gitea_admin_user.username }}"
+        password: "{{ gitea_admin_user.password }}"
+        method: POST
+        body:
+          clone_addr: '{{ github_template_repo }}'
+          uid: 1
+          repo_name: "{{ gitea_repo_name }}"
+        return_content: yes
+        status_code: 
+         - 200
+         - 201
+        body_format: json
+        validate_certs: no
+        force_basic_auth: yes
+      register: clone_repo_result
+      tags:
+        - gitea-gloo
+    
+    - name: "Add demo origin to current git repo"
+      ansible.builtin.command:
+        argv:
+          - git
+          - remote
+          - add
+          - demo
+          - "{{ git_repo_fqn }}"
+      when: not clone_repo_result.failed

@@ -39,11 +39,6 @@ deploy-argocd:
 	@$(POETRY_COMMAND) run ansible-playbook argocd.yml $(EXTRA_ARGS)
 	@direnv allow $(ENV_FILE)
 
-deploy-gloo:
-	@direnv allow $(ENV_FILE)
-	@$(POETRY_COMMAND) run ansible-playbook gloo.yml $(EXTRA_ARGS)
-	@direnv allow $(ENV_FILE)
-
 deploy-gitea:
 	@direnv allow $(ENV_FILE)
 	@$(POETRY_COMMAND) run ansible-playbook gitea.yml --tags="gitea"
@@ -54,10 +49,6 @@ expose-gitea:
 	@$(POETRY_COMMAND) run ansible-playbook gitea.yml --tags="gitea-gloo"
 	@direnv allow $(ENV_FILE)
 
-# deploy-istio:
-# 	@direnv allow $(ENV_FILE)
-# 	@$(POETRY_COMMAND) run ansible-playbook istio.yml $(EXTRA_ARGS)
-# 	@direnv allow $(ENV_FILE)
 
 tools:
 	@direnv allow $(ENV_FILE)

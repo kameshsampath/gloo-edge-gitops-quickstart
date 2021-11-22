@@ -1,0 +1,58 @@
+site_name: 'Gloo Edge GitOps Quickstart'
+site_url: https://kameshsampath.github.com/gloo-edge-gitops-quickstart
+theme:
+  name: material
+  font:
+    text: Red Hat Display
+  features:
+    - content.code.annotate
+    - content.tabs.link
+  highlightjs: true
+  hljs_languages:
+    - yaml
+    - yml
+    - shell
+    - bash
+    - javascript
+nav:
+  - 'Overview': "index.md"
+  - 'Tools and Sources': "tools-and-sources.md"
+  - 'Environment Setup': "env-setup.md"
+  - 'Deploy Argocd Applications': "gitops.md"
+  - "Clean Up": "clean-up.md"
+  - "Appendix":
+    - "Ansible Roles": "ansible-roles.md"
+    - "Troubleshooting": "troubleshooting.md"
+  
+markdown_extensions:
+  - toc:
+      baselevel: 1
+      permalink: "&para;"
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - smarty
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic:
+      mode: view
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.mark
+  - pymdownx.tabbed
+  - pymdownx.tilde
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.highlight:
+      linenums_style: pymdownx-inline
+

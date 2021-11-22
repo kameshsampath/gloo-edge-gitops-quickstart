@@ -1,6 +1,4 @@
 gloo-portal:
-  glooEdge:
-    enabled: true
   licenseKey:
     secretRef:
       name: license

@@ -1,11 +1,20 @@
+# the demo work directory
 work_dir: "{{ playbook_dir }}/work"
+# the kubeconfig directory
 kubeconfig_dir: "{{ work_dir }}/.kube"
+# the kubernetes version to use with minikube
 minikube_kubernetes_version: v1.21.6
+# the minikube home directory
 minikube_home_dir: "{{ work_dir }}/.minikube"
+# the helm.sh version to use
 helm_version: 3.7.1
+# the helm secerts plugin version
 helm_secrets_plugin_version: 3.10.0
+# the sops version
 sops_version: 3.7.1
+# the kubectl version
 kubectl_version: 1.21.6
+
 # minikube Kubernetes Clusters
 minikube_profiles:
   # cluster where management and infrastructure components are deployed
@@ -42,3 +51,33 @@ gloo_clusters:
 
 # Gitea
 gitea_tls_cert_path: "{{ work_dir}}/ssl/gitea-tls.crt"
+
+# Gitops Vars
+# GitHub Template Repo
+github_template_repo: 'https://github.com/kameshsampath/gloo-edge-gitops-quickstart'
+argocd_app_cleanup: no
+# The Git revision to use
+git_target_revision: HEAD
+# the namespace to deploy Gloo Edge
+gloo_system_namespace: gloo-system
+# the namespace to deploy Gloo Portal 
+gloo_portal_namespace: gloo-portal
+# deploy bookinfo 
+bookinfo_enabled: no
+# bookinfo reviews versions
+bookinfo_reviews_versions: 
+  - v1
+  - v2
+  - v3
+# Ecommerce demo portal 
+ecommerce_portal_enabled: no
+# httpbin demo app
+httpbin_enabled: no
+# gloo portal 
+gloo_portal_enabled: no
+# gloo portal monitization deployment
+gloo_portal_monetization_enabled: no
+# deploy keycloak 
+keycloak_enabled: no
+# petstore deploy
+petstore_enabled: no

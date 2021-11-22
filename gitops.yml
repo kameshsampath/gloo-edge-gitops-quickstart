@@ -4,7 +4,7 @@
     - vars.yml
   vars:
     #owner/repo format
-    git_repo_name: "gitea_admin/gloo-edge-gitops-quickstart"
+    gitea_repo_name: "gitea/{{ github_template_repo | basename }}"
     # uncomment this to point to GitHub or other url,
     # if this is not set it will use local gitea
     # gitops_repo_url: 'https://gitea-192.168.64.81.nip.io/'
@@ -37,7 +37,8 @@
 
     - name: "Set Git Repo Facts"
       set_fact:
-        git_url: "gitea-{{ git_service_result.resources[0] | json_query(q) | first }}.nip.io"
+        git_url: "https://gitea-{{ git_service_result.resources[0] | json_query(q) | first }}.nip.io"
+        git_repo_fqn: "https://gitea-{{ git_service_result.resources[0] | json_query(q) | first }}.nip.io/{{ gitea_repo_name }}"
       vars:
         q: "status.loadBalancer.ingress[*].ip"
       when: gitops_repo_url is not defined
@@ -53,7 +54,7 @@
           - argocd
           - repo
           - add
-          - "https://{{ git_url }}/{{ git_repo_name }}"
+          - "{{ git_repo_fqn }}"
           - --username="gitea"
           - --password="{{ gitea_password['contents'] | b64decode }}"
           - --insecure
@@ -65,17 +66,18 @@
       loop_control:
         label: "{{ item.key }}"
 
-    - name: "Generate Argocd Apps Config"
-      ansible.builtin.template:
-        src: "{{ playbook_dir }}/templates/argocd/apps-values.yaml.j2"
-        dest: "{{ work_dir }}/argo-apps-values.yaml"
+    - name: "Register GitOps Facts"
+      set_fact:
+        kube_cluster_url: "{{ api.connection.host }}"
+        git_repository_url: "{{ git_repo_fqn }}"
+
     - name: "Deploy Argocd Applications"
       kubernetes.core.helm:
         release_namespace: argocd
         release_name: gloo-edge-gitops-quickstart
         create_namespace: yes
         chart_ref: "{{ playbook_dir }}/charts/argocd-apps"
-        values_files:
+        values_files: 
           - "{{ work_dir }}/argo-apps-values.yaml"
         context: "{{ argocd_k8s_context }}"
       when: argocd_app_cleanup is not defined or not argocd_app_cleanup
