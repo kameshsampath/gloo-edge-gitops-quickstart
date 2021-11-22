@@ -16,7 +16,7 @@ At the end of this chapter you would have,
 Navigate to Tutorial home
 
 ```bash
-cd $TUTORIAL_HOME
+cd $DEMO_HOME
 ```
 
 Set cluster environment variables

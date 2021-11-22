@@ -30,10 +30,10 @@ The following tables shows the environment to component matrix.
 | keycloak | :material-check: | :material-check:
 | petstore | :material-check: | :material-check:
 
-Navigate to the `$TUTORIAL_HOME`,
+Navigate to the `$DEMO_HOME`,
 
 ```bash
-cd $TUTORIAL_HOME
+cd $DEMO_HOME
 ```
 
 ### Ansible Variables File
@@ -118,7 +118,17 @@ gloo_clusters:
 make clusters
 ```
 
+The task creates the kubernetes clusters configured using `minikube_profiles` and also downloads the compatible tools to `$DEMO_HOME/bin`.
+
+Add the `$DEMO_HOME/bin` to your path to make sure the right versions of the tools are used,
+
+```shell
+export PATH="$DEMO_HOME/bin:$PATH"
+```
+
 ## Deploy Gitea
+
+As part of the demo we will use locally hosted [Gite](https://gitea.io) git repository,
 
 ```shell
 make deploy-gitea
@@ -148,7 +158,14 @@ Ensure the sops configration `.sops.yml` is updated with your *age* publickey,
 yq eval '.creation_rules[0].age |= strenv(SOPS_AGE_RECIPIENTS)' .sops.yml 
 ```
 
-We need to make the age key to be available to the Argocd repo server so that it can decrypt the secrets,
+## Deploy Argocd
+
+Argocd has to be customized to allow decrypting of secrets using the age key. The [values.yaml](./helm_vars/argocd/values.yaml) will do extra configure overrides when deploying Argocd:
+
+- does patch the Argocd's argocd-repo-server deployment to mount the secret-keys as repo-server volume.
+- install the helm plugin and age tools and make it available as `custom-tools` volumes.
+
+We also need to make sure the age key is to be available to the Argocd repo server so that it can decrypt the secerts while deploying the resources via helm,
 
 ```shell
 kubectl create ns argocd
@@ -160,17 +177,8 @@ kubectl create secret generic helm-secrets-private-keys \
   --from-file=key.txt="$SOPS_AGE_KEY_FILE"
 ```
 
-## Deploy Argocd
-
-Deploy Argocd,
+Now we are good deploy argocd by running the comand
 
 ```shell
 make deploy-argocd
 ```
-
-!!! note
-	
-	The [values.yaml](./helm_vars/argocd/values.yaml) will do extra configure overrides when deploying Argocd: 
-
-	- does patch the Argocd's argocd-repo-server deployment to mount the secret-keys as repo-server volume
-	- install the helm plugin and age tools and make it available as `custom-tools` volumes

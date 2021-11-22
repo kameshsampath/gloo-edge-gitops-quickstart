@@ -44,7 +44,7 @@ export SOPS_AGE_RECIPIENTS=$(cat $SOPS_AGE_KEY_FILE  | awk 'NR==2{ print $4}')
 ```
 
 !!! tip
-  You can tools like [direnv](https://direnv.net/) to configure and load the environment variables.
+    You can tools like [direnv](https://direnv.net/) to configure and load the environment variables.
 
 ## Prepare Gloo Deployment
 

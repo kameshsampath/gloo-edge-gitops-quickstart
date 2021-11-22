@@ -24,16 +24,16 @@ git clone https://github.com/kameshsampath/gloo-edge-gitops-quickstart
 cd gloo-edge-gitops-quickstart
 ```
 
-For convinience, we will refer the clone demo sources folder as `$TUTORIAL_HOME`,
+For convinience, we will refer the clone demo sources folder as `$DEMO_HOME`,
 
 ```shell
-export TUTORIAL_HOME="$PWD"
+export DEMO_HOME="$PWD"
 ```
 
 Navigate to the project home,
 
 ```bash
-cd $TUTORIAL_HOME
+cd $DEMO_HOME
 ```
 
 ## Ensure Poetry
@@ -50,7 +50,7 @@ Lets ensure `poetry` is setup correctly, running the following command should re
 poetry --version
 ```
 
-Let us configure `poetry` to create the python3 virutalenv in the project directory `$TUTORIAL_HOME`,
+Let us configure `poetry` to create the python3 virutalenv in the project directory `$DEMO_HOME`,
 
 ```bash
 poetry config  virtualenvs.in-project true
@@ -64,11 +64,11 @@ To create the virutal environment run the following command,
 make create-venv
 ```
 
-The command will instal all the required python modules in the `$TUTORIAL_HOME/.venv`.
+The command will instal all the required python modules in the `$DEMO_HOME/.venv`.
 
 Install the ansible roles and collections that will be used by the playbooks,
 
 ```bash
-poetry run ansible-galaxy role install -r $TUTORIAL_HOME/requirements.yml
-poetry run ansible-galaxy collection install -r $TUTORIAL_HOME/requirements.yml
+poetry run ansible-galaxy role install -r $DEMO_HOME/requirements.yml
+poetry run ansible-galaxy collection install -r $DEMO_HOME/requirements.yml
 ```
