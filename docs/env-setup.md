@@ -121,7 +121,6 @@ gloo_clusters:
 ---8<--- "vars.yml"
 ```
 
-
 ## Setup Kubernetes Clusters
 
 ```shell
@@ -135,6 +134,30 @@ Add the `$DEMO_HOME/bin` to your path to make sure the right versions of the too
 ```shell
 export PATH="$DEMO_HOME/bin:$PATH"
 ```
+
+!!!tip
+    When you have `metallb` addon enabled it will be required for you to configure the addon using minikube. As matter of convinice you can add the following tasks to the clusters playbook to make ansible do it for you
+
+    ```yaml
+    ...
+    tasks:
+    - name: "Configure metallb"
+      ansible.builtin.expect:
+        command: "{{ minikube_binary }} -p {{ item.key }} addons configure metallb"
+        responses:
+          "-- Enter Load Balancer Start IP:": "{{ item.value.lbStartIP}}"
+          "-- Enter Load Balancer End IP:": "{{ item.value.lbEndIP}}"
+      loop: "{{ minikube_profiles | dict2items }}"
+      loop_control:
+         label: "{{ item.key }}"
+      register: lb_setup_result
+      when: item.value.create and not item.value.destroy
+    
+    - name: "Metallb result"
+      debug:
+        var: lb_setup_result
+    ...
+    ```
 
 ## Deploy Gitea
 
