@@ -8,10 +8,6 @@ minikube_kubernetes_version: v1.21.6
 minikube_home_dir: "{{ work_dir }}/.minikube"
 # the helm.sh version to use
 helm_version: 3.7.1
-# the helm secerts plugin version
-helm_secrets_plugin_version: 3.10.0
-# the sops version
-sops_version: 3.7.1
 # the kubectl version
 kubectl_version: 1.21.6
 
@@ -33,51 +29,19 @@ minikube_profiles:
       - metallb
     lbStartIP: 192.168.64.100
     lbEndIP: 192.168.64.110
-  cluster2:
-    create: no
-    destroy: no
-    addons:
-      - metallb
-    lbStartIP: 192.168.64.120
-    lbEndIP: 192.168.64.130
 # Gloo Edge Kubernetes clusters
 gloo_clusters:
   cluster1:
     cloud: minikube
     k8s_context: cluster1
-    install_istio: yes
     cluster_name: cluster1
     enable_portal: yes
 
-# Gitea
-gitea_tls_cert_path: "{{ work_dir}}/ssl/gitea-tls.crt"
+enable_portal_monetization: yes
 
-# Gitops Vars
-# GitHub Template Repo
-github_template_repo: 'https://github.com/kameshsampath/gloo-edge-gitops-quickstart'
-argocd_app_cleanup: no
-# The Git revision to use
-git_target_revision: HEAD
-# the namespace to deploy Gloo Edge
-gloo_system_namespace: gloo-system
-# the namespace to deploy Gloo Portal 
-gloo_portal_namespace: gloo-portal
-# deploy bookinfo 
-bookinfo_enabled: no
-# bookinfo reviews versions
-bookinfo_reviews_versions: 
-  - v1
-  - v2
-  - v3
-# Ecommerce demo portal 
-ecommerce_portal_enabled: no
-# httpbin demo app
-httpbin_enabled: no
-# gloo portal 
-gloo_portal_enabled: no
-# gloo portal monitization deployment
-gloo_portal_monetization_enabled: no
-# deploy keycloak 
-keycloak_enabled: no
-# petstore deploy
-petstore_enabled: no
+kubernetes_spices_argocd_k8s_context: "mgmt"
+kubernetes_spices_tektoncd_k8s_context: "cluster1"
+
+# Gitea
+kubernetes_spices_gitea_k8s_context: "mgmt"
+gitea_tls_cert_path: "{{ work_dir}}/ssl/gitea-tls.crt"

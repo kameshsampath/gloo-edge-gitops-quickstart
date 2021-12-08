@@ -1,11 +1,10 @@
-- name: "Setup Gitea"
+- name: "Deploy Tektoncd pipelines"
   hosts: all
   vars_files:
     - vars.yml
-  
   roles:
-   - role: kameshsampath.kubernetes_spices.gitea
-  
+   - role: kameshsampath.kubernetes_spices.tektoncd
+
   tasks:
     - name: "direnv allow"
       ansible.builtin.command:

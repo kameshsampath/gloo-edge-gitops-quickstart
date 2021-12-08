@@ -16,12 +16,12 @@ theme:
     - javascript
 nav:
   - 'Overview': "index.md"
-  - 'Tools and Sources': "tools-and-sources.md"
+  - 'Get Started': "tools-and-sources.md"
   - 'Environment Setup': "env-setup.md"
-  - 'Deploy Argocd Applications': "gitops.md"
+  - 'GitOps Examples': "gitops.md"
   - "Clean Up": "clean-up.md"
   - "Appendix":
-    - "Ansible Roles": "ansible-roles.md"
+    - "Ansible Roles": "ansible.md"
     - "Troubleshooting": "troubleshooting.md"
   
 markdown_extensions:

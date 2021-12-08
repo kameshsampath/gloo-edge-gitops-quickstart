@@ -20,43 +20,47 @@ clean-up:
 	@$(POETRY_COMMAND) run ansible-playbook cleanup.yml  $(EXTRA_ARGS)
 
 create-kube-clusters:
-	@direnv allow $(ENV_FILE)
+	direnv allow $(ENV_FILE)
 	@$(POETRY_COMMAND) run ansible-playbook clusters.yml $(EXTRA_ARGS)
-	@direnv allow $(ENV_FILE)
+	direnv allow $(ENV_FILE)
 
-setup:
-	@direnv allow $(ENV_FILE)
+all:
+	direnv allow $(ENV_FILE)
 	@$(POETRY_COMMAND) run ansible-playbook playbook.yml $(EXTRA_ARGS)
-	@direnv allow $(ENV_FILE)
-
-deploy-argocd-apps:
-	@direnv allow $(ENV_FILE)
-	@$(POETRY_COMMAND) run ansible-playbook gitops.yml $(EXTRA_ARGS)
-	@direnv allow $(ENV_FILE)
+	direnv allow $(ENV_FILE)
 
 deploy-argocd:
-	@direnv allow $(ENV_FILE)
+	direnv allow $(ENV_FILE)
 	@$(POETRY_COMMAND) run ansible-playbook argocd.yml $(EXTRA_ARGS)
-	@direnv allow $(ENV_FILE)
+	direnv allow $(ENV_FILE)
+
+deploy-extras:
+	direnv allow $(ENV_FILE)
+	@$(POETRY_COMMAND) run ansible-playbook extras.yml $(EXTRA_ARGS)
+	direnv allow $(ENV_FILE)
+
+deploy-pipelines:
+	direnv allow $(ENV_FILE)
+	@$(POETRY_COMMAND) run ansible-playbook pipelines.yml $(EXTRA_ARGS)
+	direnv allow $(ENV_FILE)
+
+deploy-gloo:
+	direnv allow $(ENV_FILE)
+	@$(POETRY_COMMAND) run ansible-playbook gloo.yml $(EXTRA_ARGS)
+	direnv allow $(ENV_FILE)
 
 deploy-gitea:
-	@direnv allow $(ENV_FILE)
-	@$(POETRY_COMMAND) run ansible-playbook gitea.yml --tags="gitea"
-	@direnv allow $(ENV_FILE)
-
-expose-gitea:
-	@direnv allow $(ENV_FILE)
-	@$(POETRY_COMMAND) run ansible-playbook gitea.yml --tags="gitea-gloo"
-	@direnv allow $(ENV_FILE)
-
+	direnv allow $(ENV_FILE)
+	@$(POETRY_COMMAND) run ansible-playbook gitea.yml $(EXTRA_ARGS)
+	direnv allow $(ENV_FILE)
 
 tools:
-	@direnv allow $(ENV_FILE)
+	direnv allow $(ENV_FILE)
 	@$(POETRY_COMMAND) run ansible-playbook tools.yml $(EXTRA_ARGS)
-	@direnv allow $(ENV_FILE)
+	direnv allow $(ENV_FILE)
 
 test:
-	@direnv allow $(ENV_FILE)
+	direnv allow $(ENV_FILE)
 	@$(POETRY_COMMAND) run ansible-playbook test.yml $(EXTRA_ARGS)
-	@direnv allow $(ENV_FILE)
+	direnv allow $(ENV_FILE)
 

@@ -1,10 +1,8 @@
 ---
-# roles:
-#   - name: kameshsampath.minikube
-#     src: https://github.com/kameshsampath/ansible-role-minikube
-#     revision: main
+---
+roles:
+  - name: kameshsampath.minikube
 collections:
-  # - name: kameshsampath.gloo
-  #   src: https://github.com/kameshsampath/kameshsampath.gloo
-  #   revision: main
+  - name: kameshsampath.gloo
+  - name: kameshsampath.kubernetes_spices
   - name: community.crypto

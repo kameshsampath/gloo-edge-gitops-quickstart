@@ -15,7 +15,7 @@
       loop_control:
          label: "{{ item.key }}"
       register: lb_setup_result
-      when: "{{ item.value.create and not item.value.destroy }}"
+      when: item.value.create and not item.value.destroy
     
     - name: "Metallb result"
       debug:
@@ -37,3 +37,20 @@
         recurse: yes
         path: "{{ work_dir }}/.kube"
         mode: "0700"
+
+    - name: "Setup .envrc"
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/templates/.envrc.j2"
+        dest: "{{ work_dir }}/.envrc"
+
+    - name: "create symlink to .envrc"
+      ansible.builtin.file:
+        state: link
+        path: "{{ playbook_dir }}/.envrc"
+
+    - name: "direnv allow"
+      ansible.builtin.command:
+        argv:
+          - direnv
+          - allow
+          - "{{ playbook_dir }}"

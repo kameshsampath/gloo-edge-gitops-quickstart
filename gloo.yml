@@ -1,12 +1,11 @@
-- name: "Setup Gitea"
+- name: "Deploy Gloo Edge and Gloo Portal"
   hosts: all
   vars_files:
     - vars.yml
-  
   roles:
-   - role: kameshsampath.kubernetes_spices.gitea
-  
+    - role: kameshsampath.gloo.edge
   tasks:
+
     - name: "direnv allow"
       ansible.builtin.command:
         argv:
