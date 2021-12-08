@@ -750,6 +750,29 @@
 <p>Add the <code>$DEMO_HOME/bin</code> to your path to make sure the right versions of the tools are used,</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$DEMO_HOME</span><span class="s2">/bin:</span><span class="nv">$PATH</span><span class="s2">&quot;</span>
 </code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>When you have <code>metallb</code> addon enabled it will be required for you to configure the addon using minikube. As matter of convinice you can add the following tasks to the clusters playbook to make ansible do it for you</p>
+<div class="highlight"><pre><span></span><code><span class="nn">...</span>
+<span class="nt">tasks</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&quot;Configure</span><span class="nv"> </span><span class="s">metallb&quot;</span>
+  <span class="nt">ansible.builtin.expect</span><span class="p">:</span>
+    <span class="nt">command</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">minikube_binary</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">-p</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">item.key</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">addons</span><span class="nv"> </span><span class="s">configure</span><span class="nv"> </span><span class="s">metallb&quot;</span>
+    <span class="nt">responses</span><span class="p">:</span>
+      <span class="s">&quot;--</span><span class="nv"> </span><span class="s">Enter</span><span class="nv"> </span><span class="s">Load</span><span class="nv"> </span><span class="s">Balancer</span><span class="nv"> </span><span class="s">Start</span><span class="nv"> </span><span class="s">IP:&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">item.value.lbStartIP}}&quot;</span>
+      <span class="s">&quot;--</span><span class="nv"> </span><span class="s">Enter</span><span class="nv"> </span><span class="s">Load</span><span class="nv"> </span><span class="s">Balancer</span><span class="nv"> </span><span class="s">End</span><span class="nv"> </span><span class="s">IP:&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">item.value.lbEndIP}}&quot;</span>
+  <span class="nt">loop</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">minikube_profiles</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">dict2items</span><span class="nv"> </span><span class="s">}}&quot;</span>
+  <span class="nt">loop_control</span><span class="p">:</span>
+     <span class="nt">label</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">item.key</span><span class="nv"> </span><span class="s">}}&quot;</span>
+  <span class="nt">register</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lb_setup_result</span>
+  <span class="nt">when</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">item.value.create and not item.value.destroy</span>
+
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&quot;Metallb</span><span class="nv"> </span><span class="s">result&quot;</span>
+  <span class="nt">debug</span><span class="p">:</span>
+    <span class="nt">var</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lb_setup_result</span>
+<span class="nn">...</span>
+</code></pre></div>
+</div>
 <h2 id="deploy-gitea">Deploy Gitea<a class="headerlink" href="#deploy-gitea" title="Permanent link">&para;</a></h2>
 <p>Deploy minkube hosted <a href="https://gitea.io">Gitea</a> git repository for working with GitOps,</p>
 <div class="highlight"><pre><span></span><code>make deploy-gitea
